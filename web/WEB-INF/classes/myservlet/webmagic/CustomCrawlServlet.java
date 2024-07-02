@@ -2,6 +2,7 @@ package myservlet.webmagic;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import javax.servlet.ServletException;
@@ -9,29 +10,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URL;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import static java.lang.Thread.sleep;
 
+
 public class CustomCrawlServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String url = request.getParameter("customUrl");
-//        System.out.println(url);
-//        Document document = Jsoup.connect(url).get();
-        // 设置ChromeDriver路径
+        int type =  Integer.parseInt(request.getParameter("type")) ;
+        System.out.println(type);
         System.setProperty("webdriver.chrome.driver", "E:\\work\\driver\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        options.addArguments("--window-size=1920,1080");
+        options.addArguments("-headless");
+//        options.addArguments("--window-size=1920,1080");
         // 初始化WebDriver
-        WebDriver driver = new ChromeDriver();
+        WebDriver driver = new ChromeDriver(options);
         //设置driver nohead
 
         driver.get(url);
@@ -44,15 +42,44 @@ public class CustomCrawlServlet extends HttpServlet {
 
         // 获取页面源代码
         String pageSource = driver.getPageSource();
-        driver.close();
-//        URL sd = new URL(url);
+        driver.quit();
         Document document = Jsoup.parse(pageSource);
-        System.out.println(document.title());
-        Elements el = document.select("div h2");
-        request.setAttribute("el",el);
         request.setAttribute("title",document.title());
-        System.out.println(document);
+        //获取meta中的网页详细
+        Element desc = (document.select("meta[name=description]").first() != null) ? document.select("meta[name='description']").first() : document.select("meta[property='og:description']").first();
+        if (desc != null) request.setAttribute("desc", desc.attr("content"));
+        if(type == 1){
+            while(true){
+                if(document.select("div").first() == null || document.select("div").first().select("h2,h1") == null)continue;
+                else {
+                   Elements els = document.select("[id~=(?i)result],[id~=(?i)content]");
+//                   System.out.println(els);
+                    if(els == null)continue;
+                   Element content = new Element("div");
+                   for(Element e:els){
+                       try {
+                           e.select("h2,h1,div[class~=(?i)title],div[id~=(?i)title]").first().appendTo(content);
+                           while (e.select("p").next() != null)
+                           content.append(e.select("p").after("<br>").outerHtml());
+//                       System.out.println(content);
+                       }catch (Exception ex){
+                           continue;
+                       }
 
+                   }
+                    System.out.println(content.html());
+                    request.setAttribute("content",content.html().equals("")?"<h2>内容获取失败</h2>":content.outerHtml());
+                    break;
+                }
+
+            }
+        }
+        else if(type == 0) {
+
+            Elements el = document.select("div h2");
+            if(el != null)request.setAttribute("el", el);
+//            System.out.println(desc);
+        }
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 }
