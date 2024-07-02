@@ -59,16 +59,14 @@ public class CustomCrawlServlet extends HttpServlet {
                    for(Element e:els){
                        try {
                            e.select("h2,h1,div[class~=(?i)title],div[id~=(?i)title]").first().appendTo(content);
-                           while (e.select("p").next() != null)
-                           content.append(e.select("p").after("<br>").outerHtml());
+                           content.append(e.select("p,pre,li").after("<br>").outerHtml());
 //                       System.out.println(content);
                        }catch (Exception ex){
                            continue;
                        }
 
                    }
-                    System.out.println(content.html());
-                    request.setAttribute("content",content.html().equals("")?"<h2>内容获取失败</h2>":content.outerHtml());
+                    request.setAttribute("content",content.outerHtml().equals("")?"<h2>内容获取失败</h2>":content.outerHtml());
                     break;
                 }
 

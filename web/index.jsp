@@ -1,12 +1,16 @@
 <%@page contentType="text/html;charset=utf-8" %>
+<%@ page import="org.jsoup.select.Elements" %>
+<%@ page import="org.jsoup.nodes.Element" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>爬虫主页</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link>
 </head>
 <body>
+
 <div class="container">
     <h1 class="mt-5">爬虫主页</h1>
     <div class="card mt-3">
@@ -45,8 +49,42 @@
                 </div>
                 <button type="submit" class="btn btn-primary">爬取</button>
             </form>
+
         </div>
+
     </div>
+    <%
+        out.println("<div class='result border border-1 container mt-3  px-4'>");
+        request.setCharacterEncoding("utf-8");
+        String desc = (String) request.getAttribute("desc");
+        String title = (String) request.getAttribute("title");
+        if(request.getParameter("type").equals("1") &&title!=null){
+            try{
+                String con = (String) request.getAttribute("content");
+                out.println(con);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else if(title!=null) try {
+            Elements el = (Elements) request.getAttribute("el");
+            out.println("<h2>"+title+"</h2>");
+            if(desc!=null)out.println("<br><small class=\"text-muted\">"+desc+"</small>");
+            out.println("<div class='row row-cols-2'>");
+            for(Element i:el){
+                out.println("<div class='card h-100'>");
+                out.println("<div class='card-body position-relative'>");
+                out.println(i.text()+"<br>");
+                out.println("<a href="+ el.select("a[href]").attr("href")+" class=\"btn btn-primary\">Go somewhere</a>");
+                out.println("</div></div>");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+//            out.println("error");
+        }
+        out.println("</div>");
+    %>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
