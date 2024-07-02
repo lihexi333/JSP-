@@ -59,7 +59,7 @@ public class CustomCrawlServlet extends HttpServlet {
                    for(Element e:els){
                        try {
                            e.select("h2,h1,div[class~=(?i)title],div[id~=(?i)title]").first().appendTo(content);
-                           content.append(e.select("p,pre,li").after("<br>").outerHtml());
+                           content.append(e.select("p,pre").after("<br>").outerHtml());
 //                       System.out.println(content);
                        }catch (Exception ex){
                            continue;
