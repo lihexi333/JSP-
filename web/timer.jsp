@@ -6,7 +6,7 @@
     Date time = new Date();
     session.setAttribute("time",time);
     String interval="";
-    out.println(request.getParameter("interval"));
+//    out.println(request.getParameter("interval"));
     if(session.getAttribute("interval")==null || request.getParameter("interval")!=null){//当刷新时间不存在或者再次设定刷新时间时
         interval= request.getParameter("interval");
         session.setAttribute("interval", interval);
