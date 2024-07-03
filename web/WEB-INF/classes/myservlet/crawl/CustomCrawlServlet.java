@@ -1,4 +1,4 @@
-package myservlet.webmagic;
+package myservlet.crawl;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -48,25 +48,27 @@ public class CustomCrawlServlet extends HttpServlet {
         //获取meta中的网页详细
         Element desc = (document.select("meta[name=description]").first() != null) ? document.select("meta[name='description']").first() : document.select("meta[property='og:description']").first();
         if (desc != null) request.setAttribute("desc", desc.attr("content"));
-        if(type == 1){
-            System.out.println("start 1");
+        if(type == 1){//拉取文章咨询等页面
+            System.out.println("文章");
             while(true){
-                if(document.select("div").first() == null || document.select("div").first().select("[id~=(?i)result],[id~=(?i)content],[class~=(?i)result],[class~=(?i)content]") == null)continue;
+                if(document.select("div").first().select("[id~=(?i)(result|content|news)],[class~=(?i)(result|content|news)],article") == null)continue;
                 else {
-                   Elements els = document.select("[id~=(?i)(result|news)],[id~=(?i)content],[class~=(?i)result],[class~=(?i)content]");
+                   Elements els = document.select("[id~=(?i)(result|content|news)],[class~=(?i)(result|content|news)],article");
                     if(els == null)continue;
                    Element content = new Element("div");
 
                    for(Element e:els){
+                       Element inner_con = new Element("div");
+                       try {
+                           e.select("[id~=(?i)(result|content|news)],[class~=(?i)(result|content|news)],article > h2,h1,[class~=(?i)title],[id~=(?i)title]").first().addClass("card-title").appendTo(inner_con);//获取标题
+                           inner_con.append(e.select("[id~=(?i)(result|content|news)],[class~=(?i)(result|content|news)],article > p,pre,span").outerHtml());//获取内容
 
-                           Element inner_con = content.appendElement("div").addClass("card");
-                       try {
-                           e.select("h2,h1,[class~=(?i)title],[id~=(?i)title]").first().addClass("card-title").appendTo(inner_con);//获取标题
-                       }catch (Exception ex1){}
-                       try {
-                           inner_con.append(e.select("p,pre,span").after("<br>").outerHtml());//获取内容
 //                       System.out.println(content);
                        }catch (Exception ex2){
+                           continue;
+                       }
+                       if(inner_con.text()!=null){//清洗空元素
+                           content.append(inner_con.outerHtml()).addClass("card");
                        }
 
                    }
@@ -76,8 +78,8 @@ public class CustomCrawlServlet extends HttpServlet {
 
             }
         }
-        else if(type == 0) {
-            System.out.println("start 2");
+        else if(type == 0) {//拉取搜索结果
+            System.out.println("搜索");
             Elements el = document.select("div h2");
             if(el != null)request.setAttribute("el", el);
         }

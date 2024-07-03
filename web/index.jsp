@@ -6,7 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <title>爬虫主页</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./assets/css/bootstrap.css" rel="stylesheet">
+    <script src="./assets/js/bootstrap.js"></script>
     <link>
 </head>
 <body>
@@ -27,7 +28,7 @@
                     <label for="interval">时间间隔（分钟）:</label>
                     <input type="number" class="form-control" id="interval" name="interval" required>
                 </div>
-                <button type="submit" class="btn btn-primary">开始定时爬取</button>
+                <button type="submit" class="btn btn-primary mt-3">开始定时爬取</button>
             </form>
         </div>
     </div>
@@ -39,7 +40,7 @@
         <div class="card-body">
             <form action="customCrawl" method="post">
                 <div class="form-group">
-                    <input id="search" type="radio" value="0" checked name="type">
+                    <input id="search" type="radio" value="0" name="type">
                     <label for="search">搜索</label>
                     <input id="news" type="radio" value="1" name="type">
                     <label for="news">新闻</label>
@@ -47,7 +48,8 @@
                     <label for="customUrl">网址:</label>
                     <input type="text" class="form-control" id="customUrl" name="customUrl" required>
                 </div>
-                <button type="submit" class="btn btn-primary">爬取</button>
+                <button type="submit" class="btn btn-primary mt-3">爬取</button>
+<button type="button" class="btn btn-primary mt-3" onclick="toPDF">保存</button>
             </form>
 
         </div>
@@ -58,7 +60,7 @@
         request.setCharacterEncoding("utf-8");
         String desc = (String) request.getAttribute("desc");
         String title = (String) request.getAttribute("title");
-        out.println("<h2>"+title+"</h2>");
+        if(title!=null)out.println("<h2>"+title+"</h2>");
         if(desc!=null)out.println("<br><small class=\"text-muted\">"+desc+"</small>");
         int type = request.getParameter("type")!=null?Integer.parseInt( request.getParameter("type")):-1 ;
         if(type==1 &&title!=null){
