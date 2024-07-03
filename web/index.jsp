@@ -8,7 +8,6 @@
     <title>爬虫主页</title>
     <link href="./assets/css/bootstrap.css" rel="stylesheet">
     <script src="./assets/js/bootstrap.js"></script>
-    <link>
 </head>
 <body>
 
@@ -19,13 +18,10 @@
             定时爬取文章
         </div>
         <div class="card-body">
-            <form action="startScheduledCrawl" method="post">
+            <p>本模块拉取新浪新闻内容，请设定更新时间。</p>
+            <form action="timer.jsp" method="post">
                 <div class="form-group">
-                    <label for="url">网址:</label>
-                    <input type="text" class="form-control" id="url" name="url" required>
-                </div>
-                <div class="form-group">
-                    <label for="interval">时间间隔（分钟）:</label>
+                    <label for="interval">时间间隔（秒）:</label>
                     <input type="number" class="form-control" id="interval" name="interval" required>
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">开始定时爬取</button>
@@ -49,12 +45,11 @@
                     <input type="text" class="form-control" id="customUrl" name="customUrl" required>
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">爬取</button>
-<button type="button" class="btn btn-primary mt-3" onclick="toPDF">保存</button>
+                <button type="button" class="btn btn-primary mt-3" onclick="toPDF">保存</button>
             </form>
-
         </div>
-
     </div>
+
     <%
         out.println("<div class='result border border-1 container mt-3  px-4'>");
         request.setCharacterEncoding("utf-8");
@@ -77,21 +72,17 @@
             out.println("<div class='row row-cols-2'>");
             for(Element i:el){
                 out.println("<div class='card h-100'>");
-                out.println("<div class='card-body position-relative'>");
+                out.println("<div class='card-body h-100 position-relative'>");
                 out.println(i.text()+"<br>");
-                out.println("<a href="+ el.select("a[href]").attr("href")+" class=\"btn btn-primary\">Go somewhere</a>");
+                out.println("<a href="+ el.select("a[href]").attr("href")+" class=\"mt-2\" style='right:0px;position:absolute'>Go somewhere</a>");
                 out.println("</div></div>");
             }
 
         }catch (Exception e){
             e.printStackTrace();
-//            out.println("error");
         }
         out.println("</div>");
     %>
 </div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
