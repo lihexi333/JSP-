@@ -41,7 +41,7 @@
                 <div class="form-group">
                     <input id="search" type="radio" value="0" checked name="type">
                     <label for="search">搜索</label>
-                    <input id="news" type="radio" value="1" checked name="type">
+                    <input id="news" type="radio" value="1" name="type">
                     <label for="news">新闻</label>
                     <br>
                     <label for="customUrl">网址:</label>
@@ -58,7 +58,10 @@
         request.setCharacterEncoding("utf-8");
         String desc = (String) request.getAttribute("desc");
         String title = (String) request.getAttribute("title");
-        if(request.getParameter("type").equals("1") &&title!=null){
+        out.println("<h2>"+title+"</h2>");
+        if(desc!=null)out.println("<br><small class=\"text-muted\">"+desc+"</small>");
+        int type = request.getParameter("type")!=null?Integer.parseInt( request.getParameter("type")):-1 ;
+        if(type==1 &&title!=null){
             try{
                 String con = (String) request.getAttribute("content");
                 out.println(con);
@@ -66,10 +69,9 @@
                 e.printStackTrace();
             }
         }
-        else if(title!=null) try {
+        else if(type ==0 && title!=null) try {
             Elements el = (Elements) request.getAttribute("el");
-            out.println("<h2>"+title+"</h2>");
-            if(desc!=null)out.println("<br><small class=\"text-muted\">"+desc+"</small>");
+
             out.println("<div class='row row-cols-2'>");
             for(Element i:el){
                 out.println("<div class='card h-100'>");

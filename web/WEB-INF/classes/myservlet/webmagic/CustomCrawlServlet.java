@@ -35,7 +35,7 @@ public class CustomCrawlServlet extends HttpServlet {
         driver.get(url);
         // 等待页面完全加载
         try {
-            sleep(1000);
+            sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -49,34 +49,37 @@ public class CustomCrawlServlet extends HttpServlet {
         Element desc = (document.select("meta[name=description]").first() != null) ? document.select("meta[name='description']").first() : document.select("meta[property='og:description']").first();
         if (desc != null) request.setAttribute("desc", desc.attr("content"));
         if(type == 1){
+            System.out.println("start 1");
             while(true){
-                if(document.select("div").first() == null || document.select("div").first().select("h2,h1") == null)continue;
+                if(document.select("div").first() == null || document.select("div").first().select("[id~=(?i)result],[id~=(?i)content],[class~=(?i)result],[class~=(?i)content]") == null)continue;
                 else {
-                   Elements els = document.select("[id~=(?i)result],[id~=(?i)content]");
-//                   System.out.println(els);
+                   Elements els = document.select("[id~=(?i)(result|news)],[id~=(?i)content],[class~=(?i)result],[class~=(?i)content]");
                     if(els == null)continue;
                    Element content = new Element("div");
+
                    for(Element e:els){
+
+                           Element inner_con = content.appendElement("div").addClass("card");
                        try {
-                           e.select("h2,h1,div[class~=(?i)title],div[id~=(?i)title]").first().appendTo(content);
-                           content.append(e.select("p,pre").after("<br>").outerHtml());
+                           e.select("h2,h1,[class~=(?i)title],[id~=(?i)title]").first().addClass("card-title").appendTo(inner_con);//获取标题
+                       }catch (Exception ex1){}
+                       try {
+                           inner_con.append(e.select("p,pre,span").after("<br>").outerHtml());//获取内容
 //                       System.out.println(content);
-                       }catch (Exception ex){
-                           continue;
+                       }catch (Exception ex2){
                        }
 
                    }
-                    request.setAttribute("content",content.outerHtml().equals("")?"<h2>内容获取失败</h2>":content.outerHtml());
+                    request.setAttribute("content", content.outerHtml().isEmpty() ?"<h2>内容获取失败</h2>":content.outerHtml());
                     break;
                 }
 
             }
         }
         else if(type == 0) {
-
+            System.out.println("start 2");
             Elements el = document.select("div h2");
             if(el != null)request.setAttribute("el", el);
-//            System.out.println(desc);
         }
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
