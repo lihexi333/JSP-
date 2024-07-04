@@ -3,14 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-<!--    <servlet>-->
-<!--    <servlet-name>startScheduledCrawl</servlet-name>-->
-<!--    <servlet-class>myservlet.date.ScheduledCrawlServlet</servlet-class>-->
-<!--</servlet>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>startScheduledCrawl</servlet-name>-->
-<!--        <url-pattern>/startScheduledCrawl</url-pattern>-->
-<!--    </servlet-mapping>-->
+    <servlet>
+    <servlet-name>toPdf</servlet-name>
+    <servlet-class>myservlet.pdf.ToPdfServlet</servlet-class>
+</servlet>
+    <servlet-mapping>
+        <servlet-name>toPdf</servlet-name>
+        <url-pattern>/toPdf</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>customCrawl</servlet-name>
         <servlet-class>myservlet.crawl.CustomCrawlServlet</servlet-class>

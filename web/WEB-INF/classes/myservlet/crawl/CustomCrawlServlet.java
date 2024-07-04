@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -21,18 +22,18 @@ import static java.lang.Thread.sleep;
 public class CustomCrawlServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String url = request.getParameter("customUrl");
-        int type =  Integer.parseInt(request.getParameter("type")) ;
-        System.out.println(type);
+        request.setCharacterEncoding("UTF-8");
         System.setProperty("webdriver.chrome.driver", "E:\\work\\driver\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("-headless");
-//        options.addArguments("--window-size=1920,1080");
+        options.addArguments("-headless");//设置driver nohead
+
         // 初始化WebDriver
         WebDriver driver = new ChromeDriver(options);
-        //设置driver nohead
 
-        driver.get(url);
+        String url = request.getParameter("customUrl");
+        int type =  Integer.parseInt(request.getParameter("type")) ;
+        String searchurl = new String("https://www.bing.com/search?q=".concat(url));
+        driver.get(type == 0 ? searchurl : url);
         // 等待页面完全加载
         try {
             sleep(2000);

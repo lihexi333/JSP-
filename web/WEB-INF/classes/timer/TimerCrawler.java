@@ -14,7 +14,7 @@ public class TimerCrawler {
     public static String  getHtml(String title,Elements els,String subtitle) {
         //用html表示获取结果，每个榜单封装成一个card
         Element content = new Element("div").addClass("card m-3");
-        content.append("<div class='card=header'><h2>"+title+"</h2></div>");
+        content.append("<div class='card-header '><h2>"+title+"</h2></div>");
         if(!subtitle.isEmpty())content.append("<small class=\"text-muted\">"+subtitle+"</small>");
         Element body = new Element("ul").addClass("list-group list-group-flush");
         body.append(els.addClass("list-group-item").wrap("<li class=\"list-group-item\"></li>").outerHtml());

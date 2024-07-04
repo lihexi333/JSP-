@@ -31,7 +31,7 @@
 
 <div class="container">
     <h1 class="mt-5">定时爬取结果</h1>
-    <small class="text-muted">每 <%= refreshInterval %> 秒刷新一次,上一次刷新时间为<%=session.getAttribute("time") %></small>
+    <small class="text-muted">约每 <%= refreshInterval %> 秒刷新一次,上一次刷新时间为<%=session.getAttribute("time") %></small>
     <div class="card mt-3">
         <div class="card-body">
             <%
